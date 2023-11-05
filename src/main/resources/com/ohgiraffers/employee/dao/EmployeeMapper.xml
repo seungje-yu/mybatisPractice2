@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.employee.dao.EmployeeMapper">
+
+    <resultMap id="employee" type="com.ohgiraffers.employee.dto.EmployeeDTO">
+        <id property="empid" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empNo" column="emp_no"/>
+        <result property="empEmail" column="email"/>
+        <result property="empPhone" column="phone"/>
+        <result property="empDeptCode" column="dept_code"/>
+        <result property="empJobCode" column="job_code"/>
+        <result property="empSalLevel" column="sal_level"/>
+        <result property="empSalary" column="salary"/>
+        <result property="empBonus" column="bonus"/>
+        <result property="empManagerId" column="manager_id"/>
+        <result property="empHireDate" column="hire_date"/>
+        <result property="empEntDate" column="ent_date"/>
+        <result property="empEntYn" column="ent_yn"/>
+    </resultMap>
+
+    <resultMap id="department" type="com.ohgiraffers.employee.dto.DepartmentDTO">
+        <id property="departmentId" column="dept_id"/>
+        <result property="departmentTitle" column="dept_title"/>
+        <result property="locationId" column="locationid"/>
+    </resultMap>
+
+    <resultMap id="job" type="com.ohgiraffers.employee.dto.JobDTO">
+        <id property="jobCode" column="job_code"/>
+        <result property="jobName" column="job_name"/>
+    </resultMap>
+
+    <resultMap id="EmpAndJobAndDpDTOResultMap" type="com.ohgiraffers.employee.dto.EmpAndJobAndDpDTO">
+        <id property="empName" column="emp_name"/>
+        <result property="empPhone" column="phone"/>
+        <association property="job" javaType="com.ohgiraffers.employee.dto.JobDTO">
+            <result property="jobName" column="job_name"/>
+        </association>
+        <association property="department" javaType="com.ohgiraffers.employee.dto.DepartmentDTO">
+             <result property="departmentTitle" column="dept_title"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultMap="EmpAndJobAndDpDTOResultMap">
+        SELECT
+        a.emp_name,
+        IFNULL(department.dept_title, '미배정') as dept_title,
+        job.job_name as job_name,
+        IFNULL(a.phone,'미지정') as phone
+        FROM
+        employee a
+        LEFT JOIN job ON a.job_code = job.job_code
+        LEFT JOIN department ON a.DEPT_CODE = department.DEPT_ID
+    </select>
+    <resultMap id="searchNameAndId" type="com.ohgiraffers.employee.dto.SearchDTO">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empNo" column="emp_no"/>
+        <result property="empEmail" column="email"/>
+        <result property="empPhone" column="phone"/>
+        <result property="empSalary" column="salary"/>
+        <association property="department" javaType="com.ohgiraffers.employee.dto.DepartmentDTO">
+            <result property="departmentTitle" column="dept_title"/>
+        </association>
+        <association property="job" javaType="com.ohgiraffers.employee.dto.JobDTO">
+            <result property="jobName" column="job_name"/>
+        </association>
+    </resultMap>
+    <select id="searchNameAndId" resultMap="searchNameAndId">
+        SELECT
+        a.emp_id,
+        a.emp_name,
+        a.emp_no,
+        a.email,
+        IFNULL(a.phone, '미지정') phone,
+        IFNULL(d.dept_title, '미배정') dept_title,
+        c.job_name,
+        a.salary
+        FROM
+        employee a
+        LEFT JOIN department d ON a.dept_code = d.dept_id
+        LEFT JOIN job c ON a.JOB_CODE = c.job_code
+    <where>
+        <if test="condition == 'name'">
+            AND a.emp_name LIKE CONCAT('%', #{values}, '%')
+        </if>
+        <if test="condition == 'id'">
+            AND a.emp_id LIKE CONCAT('%', #{values}, '%')
+        </if>
+    </where>
+</select>
+    <select id="selectInfoByDeptTitle" resultMap="searchNameAndId">
+        SELECT
+        a.emp_name,
+        a.email,
+        a.phone,
+        c.job_name
+        FROM
+        employee a
+        LEFT JOIN job c ON a.job_code = c.job_code
+        LEFT JOIN department d ON a.dept_code = d.dept_id
+        <where>
+            <if test="condition == 'dept'">
+                d.dept_title LIKE CONCAT ('%', #{ values }, '%')
+            </if>
+        </where>
+    </select>
+    <select id="selectInfoByJobName" resultMap="searchNameAndId">
+        SELECT
+        a.emp_name,
+        a.email,
+        a.phone,
+        IFNULL(d.dept_title, '미배정') dept_title
+        FROM
+        employee a
+        LEFT JOIN job c ON a.job_code = c.job_code
+        LEFT JOIN department d ON a.dept_code = d.dept_id
+        <where>
+            <if test="condition == 'job'">
+                c.job_name LIKE CONCAT ('%', #{ values }, '%')
+            </if>
+
+        </where>
+    </select>
+    <insert id="insertNewDept">
+        INSERT INTO
+        department
+        (
+        dept_id,
+        dept_title,
+        location_id
+        )
+        VALUES
+        (
+        #{ condition },
+        #{ values },
+        'L6'
+        )
+    </insert>
+
+    <insert id="insertNewEmp">
+        INSERT INTO
+        employee
+        (
+        emp_id,
+        emp_name,
+        emp_no,
+        email,
+        phone,
+        dept_code,
+        job_code,
+        sal_level,
+        salary,
+        bonus,
+        manager_id,
+        hire_date,
+        ent_date,
+        ent_yn
+        )
+        VALUES
+        (
+        #{ id },
+        #{ name },
+        #{ no },
+        #{ email },
+        #{ phone },
+        #{ deptCode },
+        #{ jobCode },
+        #{ salLevel },
+        #{ salary },
+        #{ bonus },
+        #{ managerId },
+        #{ hireDate },
+        null,
+        'N'
+        )
+    </insert>
+
+    <update id="modifyEmp">
+        UPDATE employee a
+        SET
+        a.emp_name = #{ empName },
+        a.phone = #{ empPhone },
+        a.email = #{ empEmail },
+        a.dept_code = (SELECT dept_id FROM department WHERE dept_title = #{departmentTitle}),
+        a.job_code = (SELECT job_code FROM job WHERE job_name = #{jobName})
+        WHERE
+        a.emp_id = #{ empId }
+    </update>
+
+    <update id="deleteEmp">
+        UPDATE employee a
+        SET
+        a.ent_yn = 'Y'
+        WHERE
+        a.emp_id = #{ id }
+    </update>
+</mapper>
