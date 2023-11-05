@@ -4,8 +4,8 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ohgiraffers.employee.mapper.EmployeeMapper">
 
-
-        <resultMap id="employeeResultMap2" type="com.ohgiraffers.employee.dto.EmployeeDTO">
+        <!--직원 이름, 부서명, 직급, 전화번호-->
+        <resultMap id="employeeResultMap1" type="com.ohgiraffers.employee.dto.EmployeeDTO">
             <id property="empId" column="EMP_ID"/>
             <result property="empName" column="EMP_NAME"/>
             <result property="phone" column="PHONE"/>
@@ -20,26 +20,39 @@
             </association>
         </resultMap>
 
+        <!--주민등록번호, 이메일, 급여, employeeResultMap1상속-->
+        <resultMap id="employeeResultMap2" type="com.ohgiraffers.employee.dto.EmployeeDTO" extends="employeeResultMap1">
+            <result property="empNo" column="EMP_NO"/>
+            <result property="email" column="EMAIL"/>
+            <result property="salary" column="SALARY"/>
+        </resultMap>
 
-<!--    <resultMap id="employeeResultMap3" type="com.ohgiraffers.employee.dto.EmployeeDTO">-->
-<!--        <id property="empId" column="EMP_ID"/>-->
-<!--        <result property="empName" column="EMP_NAME"/>-->
-<!--        <result property="phone" column="PHONE"/>-->
+        <!--이메일-->
+    <resultMap id="employeeResultMap3" type="com.ohgiraffers.employee.dto.EmployeeDTO" extends="employeeResultMap1">
+        <result property="email" column="EMAIL"/>
+    </resultMap>
+    <!--직원DTO 전부-->
+    <resultMap id="employeeAllResultMap" type="com.ohgiraffers.employee.dto.EmployeeDTO" extends="employeeResultMap2">
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="jobCode" column="JOB_CODE"/>
+        <result property="salLevel" column="SAL_LEVEL"/>
+        <result property="salary" column="SALARY"/>
+        <result property="bonus" column="BONUS"/>
+        <result property="managerId" column="MANAGER_ID"/>
+        <result property="entYn" column="ENT_YN"/>
+        <result property="entDate" column="ENT_DATE"/>
+    </resultMap>
 
-<!--    </resultMap>-->
-<!--    <resultMap id="jobResultMap" type="com.ohgiraffers.employee.dto.JobDTO">-->
-<!--        <id property="jobCode" column="JOB_CODE"/>-->
-<!--        <result property="jobName" column="JOB_NAME"/>-->
-<!--    </resultMap>-->
-<!--    <resultMap id="department" type="com.ohgiraffers.employee.dto.DepartmentDTO">-->
-<!--        <id property="deptId" column="DEPT_ID"/>-->
-<!--        <result property="deptTitle" column="DEPT_TITLE"/>-->
-<!--        <result property="locationId" column="LOCATION_ID"/>-->
-<!--    </resultMap>-->
+    <!--부서명, 지역id-->
+    <resultMap id="department" type="com.ohgiraffers.employee.dto.DepartmentDTO">
+        <id property="deptId" column="DEPT_ID"/>
+        <result property="deptTitle" column="DEPT_TITLE"/>
+        <result property="locationId" column="LOCATION_ID"/>
+    </resultMap>
 
 
 
-    <select id="selectAllMember" resultMap="employeeResultMap2">
+    <select id="selectAllMember" resultMap="employeeResultMap1">
         SELECT
                 A.EMP_NAME,
                 B.DEPT_TITLE,
@@ -47,8 +60,131 @@
                 A.PHONE
         FROM employee A
         LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
-        LEFT JOIN job C on (A.JOB_CODE = C.JOB_CODE)
+        LEFT JOIN job C on A.JOB_CODE = C.JOB_CODE
     </select>
+
+    <select id="selectAllDepartement" resultMap="department">
+        SELECT
+                A.DEPT_TITLE
+        FROM DEPARTMENT A
+    </select>
+
+    <select id="SearchNameOrId" parameterType="SearchCriteria"  resultMap="employeeResultMap2">
+        SELECT
+                A.EMP_NAME,
+                A.EMP_NO,
+                A.EMAIL,
+                A.PHONE,
+                B.DEPT_TITLE,
+                C.JOB_NAME,
+                A.SALARY
+        FROM employee A
+        LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
+        LEFT JOIN job C on (A.JOB_CODE = C.JOB_CODE)
+        <if test="condition == 'name'">
+            WHERE A.EMP_NAME LIKE CONCAT('%', #{value}, '%')
+        </if>
+        <if test="condition == 'id'">
+            WHERE A.EMP_ID = #{value}
+        </if>
+    </select>
+
+    <select id="searchDepartment" parameterType="String" resultMap="employeeResultMap3">
+        SELECT
+                A.EMP_NAME,
+                A.EMAIL,
+                A.PHONE,
+                C.JOB_NAME
+        FROM employee A
+        LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
+        LEFT JOIN job C on (A.JOB_CODE = C.JOB_CODE)
+        WHERE B.DEPT_TITLE LIKE #{department}
+    </select>
+
+    <select id="searchJob" parameterType="SearchCriteria"  resultMap="employeeResultMap3">
+        SELECT
+                A.EMP_NAME,
+                A.EMAIL,
+                A.PHONE,
+                B.DEPT_TITLE,
+                C.JOB_NAME
+        FROM employee A
+        LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
+        LEFT JOIN job C on (A.JOB_CODE = C.JOB_CODE)
+        WHERE C.JOB_NAME LIKE #{value}
+
+    </select>
+
+    <insert id="insertDeartement" parameterType="com.ohgiraffers.employee.dto.DepartmentDTO">
+        INSERT
+                INTO DEPARTMENT(
+                                DEPT_ID,
+                                DEPT_TITLE,
+                                LOCATION_ID
+                                )
+        VALUES (
+                #{deptId},
+                #{deptTitle},
+                #{locationId}
+                )
+
+    </insert>
+
+    <insert id="insertEmployee" parameterType="com.ohgiraffers.employee.dto.EmployeeDTO">
+        INSERT
+                INTO EMPLOYEE(
+                                EMP_ID,
+                                EMP_NAME,
+                                EMP_NO,
+                                EMAIL,
+                                PHONE,
+                                DEPT_CODE,
+                                JOB_CODE,
+                                SAL_LEVEL,
+                                SALARY,
+                                BONUS,
+                                MANAGER_ID,
+                                ENT_DATE,
+                                ENT_YN
+        )
+        VALUES(
+                #{empId},
+                #{empName},
+                #{empNo},
+                #{email},
+                #{phone},
+                #{deptCode},
+                #{jobCode},
+                #{salLevel},
+                #{salary},
+                #{bonus},
+                #{managerId},
+                #{entDate},
+                'Y'
+        )
+    </insert>
+
+    <update id="modifyEmployee">
+        UPDATE EMPLOYEE
+        SET
+        EMP_NAME = #{empName},
+        PHONE = #{phone},
+        EMAIL = #{email},
+        DEPT_CODE = #{deptCode},
+        JOB_CODE = #{jobCode}
+
+        WHERE EMP_ID = #{empId}
+    </update>
+
+    <update id="modifyHire">
+        UPDATE EMPLOYEE
+        SET
+        ENT_YN = 'N',
+        HIRE_DATE = #{hireDate}
+
+        WHERE EMP_ID = #{empId}
+    </update>
+
 </mapper>
 
 

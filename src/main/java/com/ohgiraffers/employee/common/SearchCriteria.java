@@ -1,4 +1,4 @@
-package com.ohgiraffers.employee.dto;
+package com.ohgiraffers.employee.common;
 
 public class SearchCriteria {
     private String condition;

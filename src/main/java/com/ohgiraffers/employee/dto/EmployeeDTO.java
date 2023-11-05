@@ -7,7 +7,7 @@ public class EmployeeDTO {
     private String empName;
     private String empNo;
     private String email;
-    private int phone;
+    private String phone;
     private String deptCode;
     private String jobCode;
     private String salLevel;
@@ -23,7 +23,7 @@ public class EmployeeDTO {
     public EmployeeDTO() {
     }
 
-    public EmployeeDTO(int empId, String empName, String empNo, String email, int phone, String deptCode, String jobCode, String salLevel, int salary, Double bonus, Integer managerId, Date hireDate, Date entDate, String entYn, JobDTO jobDTO, DepartmentDTO departmentDTO) {
+    public EmployeeDTO(int empId, String empName, String empNo, String email, String phone, String deptCode, String jobCode, String salLevel, int salary, Double bonus, Integer managerId, Date hireDate, Date entDate, String entYn, JobDTO jobDTO, DepartmentDTO departmentDTO) {
         this.empId = empId;
         this.empName = empName;
         this.empNo = empNo;
@@ -74,11 +74,11 @@ public class EmployeeDTO {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -177,7 +177,7 @@ public class EmployeeDTO {
                 ", empName='" + empName + '\'' +
                 ", empNo='" + empNo + '\'' +
                 ", email='" + email + '\'' +
-                ", phone=" + phone +
+                ", phone='" + phone + '\'' +
                 ", deptCode='" + deptCode + '\'' +
                 ", jobCode='" + jobCode + '\'' +
                 ", salLevel='" + salLevel + '\'' +
