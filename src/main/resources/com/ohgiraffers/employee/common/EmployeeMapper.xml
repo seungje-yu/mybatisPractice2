@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.employee.common.EmployeeMapper">
+    <resultMap id="firstOrder" type="com.ohgiraffers.employee.common.FirstDTO">
+        <association property="deptDTO" javaType="com.ohgiraffers.employee.common.DeptDTO">
+            <id property="deptId" column="DEPT_ID"/>
+            <result property="deptTitle" column="DEPT_TITLE"/>
+        </association>
+        <association property="employeeDTO" javaType="com.ohgiraffers.employee.common.EmployeeDTO">
+            <id property="empId" column="EMP_ID"/>
+            <result property="empName" column="EMP_NAME"/>
+            <result property="empNo" column="EMP_NO"/>
+            <result property="email" column="EMAIL"/>
+            <result property="phone" column="PHONE"/>
+            <result property="deptCode" column="DEPT_CODE"/>
+            <result property="jobCode" column="JOB_CODE"/>
+            <result property="salLevel" column="SAL_LEVEL"/>
+            <result property="salary" column="SALARY"/>
+            <result property="entYn" column="ENT_YN"/>
+        </association>
+        <association property="jobDTO" javaType="com.ohgiraffers.employee.common.JobDTO">
+            <id property="jobCode" column="JOB_CODE"/>
+            <result property="jobName" column="JOB_NAME"/>
+        </association>
+    </resultMap>
+
+    <select id="firstOrder" resultMap="firstOrder">
+        SELECT
+                A.EMP_NAME,
+                IFNULL(A.PHONE,'미지정') AS PHONE,
+                IFNULL(B.DEPT_TITLE, '미배정') AS DEPT_TITLE,
+                C.JOB_NAME
+        FROM
+                employee A
+        LEFT JOIN
+                department B ON(A.DEPT_CODE = B.DEPT_ID)
+        LEFT JOIN
+                job C ON(A.JOB_CODE = C.JOB_CODE)
+    </select>
+
+    <resultMap id="secondOrder" type="com.ohgiraffers.employee.common.SecondDTO">
+        <association property="deptDTO" javaType="com.ohgiraffers.employee.common.DeptDTO">
+            <id property="deptId" column="DEPT_ID"/>
+            <result property="deptTitle" column="DEPT_TITLE"/>
+        </association>
+        <association property="employeeDTO" javaType="com.ohgiraffers.employee.common.EmployeeDTO">
+            <id property="empId" column="EMP_ID"/>
+            <result property="empName" column="EMP_NAME"/>
+            <result property="empNo" column="EMP_NO"/>
+            <result property="email" column="EMAIL"/>
+            <result property="phone" column="PHONE"/>
+            <result property="deptCode" column="DEPT_CODE"/>
+            <result property="jobCode" column="JOB_CODE"/>
+            <result property="salLevel" column="SAL_LEVEL"/>
+            <result property="salary" column="SALARY"/>
+            <result property="entYn" column="ENT_YN"/>
+        </association>
+        <association property="jobDTO" javaType="com.ohgiraffers.employee.common.JobDTO">
+            <id property="jobCode" column="JOB_CODE"/>
+            <result property="jobName" column="JOB_NAME"/>
+        </association>
+    </resultMap>
+
+    <select id="secondOrder" parameterType="SearchCriteria" resultMap="secondOrder">
+
+        SELECT
+            A.EMP_NAME,
+            A.EMP_NO,
+            A.EMAIL,
+            A.PHONE,
+            A.SALARY,
+            B.DEPT_TITLE,
+            C.JOB_NAME
+        FROM
+                employee A
+        JOIN
+            department B ON(A.DEPT_CODE = B.DEPT_ID)
+        JOIN
+            job C ON(A.JOB_CODE = C.JOB_CODE)
+
+        WHERE
+            <if test="condition == 'name'">
+                A.EMP_NAME LIKE CONCAT('%', #{ value }, '%')
+            </if>
+            <if test="condition == 'id'">
+                A.EMP_ID = #{ value }
+            </if>
+    </select>
+
+    <resultMap id="thirdOrder" type="com.ohgiraffers.employee.common.ThirdDTO">
+        <association property="deptDTO" javaType="com.ohgiraffers.employee.common.DeptDTO">
+            <id property="deptId" column="DEPT_ID"/>
+            <result property="deptTitle" column="DEPT_TITLE"/>
+        </association>
+        <association property="employeeDTO" javaType="com.ohgiraffers.employee.common.EmployeeDTO">
+            <id property="empId" column="EMP_ID"/>
+            <result property="empName" column="EMP_NAME"/>
+            <result property="empNo" column="EMP_NO"/>
+            <result property="email" column="EMAIL"/>
+            <result property="phone" column="PHONE"/>
+            <result property="deptCode" column="DEPT_CODE"/>
+            <result property="jobCode" column="JOB_CODE"/>
+            <result property="salLevel" column="SAL_LEVEL"/>
+            <result property="salary" column="SALARY"/>
+            <result property="entYn" column="ENT_YN"/>
+        </association>
+        <association property="jobDTO" javaType="com.ohgiraffers.employee.common.JobDTO">
+            <id property="jobCode" column="JOB_CODE"/>
+            <result property="jobName" column="JOB_NAME"/>
+        </association>
+    </resultMap>
+
+    <select id="thirdOrder" parameterType="SearchCriteria" resultMap="thirdOrder">
+
+        SELECT
+        A.EMP_NAME,
+        A.PHONE,
+        A.SALARY,
+        B.DEPT_TITLE,
+        C.JOB_NAME
+
+        FROM
+        employee A
+        JOIN
+        department B ON(A.DEPT_CODE = B.DEPT_ID)
+        JOIN
+        job C ON(A.JOB_CODE = C.JOB_CODE)
+
+        WHERE
+        B.DEPT_TITLE = #{ value }
+    </select>
+
+    <resultMap id="fourthOrder" type="com.ohgiraffers.employee.common.FourthDTO">
+        <association property="deptDTO" javaType="com.ohgiraffers.employee.common.DeptDTO">
+            <id property="deptId" column="DEPT_ID"/>
+            <result property="deptTitle" column="DEPT_TITLE"/>
+        </association>
+        <association property="employeeDTO" javaType="com.ohgiraffers.employee.common.EmployeeDTO">
+            <id property="empId" column="EMP_ID"/>
+            <result property="empName" column="EMP_NAME"/>
+            <result property="empNo" column="EMP_NO"/>
+            <result property="email" column="EMAIL"/>
+            <result property="phone" column="PHONE"/>
+            <result property="deptCode" column="DEPT_CODE"/>
+            <result property="jobCode" column="JOB_CODE"/>
+            <result property="salLevel" column="SAL_LEVEL"/>
+            <result property="salary" column="SALARY"/>
+            <result property="entYn" column="ENT_YN"/>
+        </association>
+        <association property="jobDTO" javaType="com.ohgiraffers.employee.common.JobDTO">
+            <id property="jobCode" column="JOB_CODE"/>
+            <result property="jobName" column="JOB_NAME"/>
+        </association>
+    </resultMap>
+
+    <select id="fourthOrder" parameterType="SearchCriteria" resultMap="fourthOrder">
+
+        SELECT
+        A.EMP_NAME,
+        A.EMAIL,
+        A.PHONE,
+        A.SALARY,
+        B.DEPT_TITLE,
+        C.JOB_NAME
+
+        FROM
+        employee A
+        JOIN
+        department B ON(A.DEPT_CODE = B.DEPT_ID)
+        JOIN
+        job C ON(A.JOB_CODE = C.JOB_CODE)
+
+        WHERE
+        C.JOB_NAME = #{ value }
+    </select>
+
+    <update id="sevenOrder">
+                UPDATE
+                    employee A
+                inner join
+                    department B ON(A.DEPT_CODE = B.DEPT_ID)
+                inner JOIN
+                    job C ON(A.JOB_CODE = C.JOB_CODE)
+                SET
+                        A.EMP_NAME = #{ name },
+                        A.PHONE = #{ phone },
+                        A.EMAIL = #{ email },
+                        B.DEPT_TITLE = #{ deptTitle },
+                        C.JOB_NAME = #{ jobName }
+                WHERE
+                        EMP_ID = #{ code }
+
+    </update>
+
+    <update id="eightOrder">
+        UPDATE
+        employee
+
+        SET
+        ENT_YN = 'Y'
+
+        WHERE
+        EMP_NAME = #{ name }
+    </update>
+
+    <resultMap id="tenOrder" type="com.ohgiraffers.employee.common.TenDTO">
+        <association property="employeeDTO" javaType="com.ohgiraffers.employee.common.EmployeeDTO">
+            <id property="empId" column="EMP_ID"/>
+            <result property="empName" column="EMP_NAME"/>
+            <result property="empNo" column="EMP_NO"/>
+            <result property="email" column="EMAIL"/>
+            <result property="phone" column="PHONE"/>
+            <result property="deptCode" column="DEPT_CODE"/>
+            <result property="jobCode" column="JOB_CODE"/>
+            <result property="salLevel" column="SAL_LEVEL"/>
+            <result property="salary" column="SALARY"/>
+            <result property="entYn" column="ENT_YN"/>
+        </association>
+
+    </resultMap>
+
+    <select id="tenOrder" resultMap="tenOrder">
+        SELECT
+        A.EMP_NAME,
+        A.ENT_YN
+        FROM
+        employee A
+
+    </select>
+
+    <insert id="fiveOrderDept">
+        INSERT
+        INTO
+                department(
+                        DEPT_ID,
+                        DEPT_TITLE,
+                        LOCATION_ID
+        )
+        VALUES(
+        #{ deptId },
+        #{ deptTitle },
+        #{ locationId }
+        )
+    </insert>
+
+    <insert id="sixOrder">
+        INSERT
+        INTO
+            employee(
+                    EMP_ID,
+                    EMP_NAME,
+                    EMP_NO,
+                    EMAIL,
+                    PHONE,
+                    DEPT_CODE,
+                    JOB_CODE,
+                    SAL_LEVEL,
+                    SALARY,
+                    ENT_YN
+        )
+        VALUES(
+            #{empId},
+            #{empName},
+            #{empNo},
+            #{email},
+            #{phone},
+            null,
+            #{jobCode},
+            #{salLevel},
+            null,
+            "N"
+        )
+    </insert>
+
+
+
+
+</mapper>
