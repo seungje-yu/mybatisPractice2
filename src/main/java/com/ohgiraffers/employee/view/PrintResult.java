@@ -13,20 +13,11 @@ public class PrintResult {
 
             System.out.print(employeeDTO.getEmpName());//이름
             System.out.print(" / ");
-            if (employeeDTO.getDepartmentDTO() == null) {//부서명 null
-                System.out.print("미배정");
-            } else {
-                System.out.print(employeeDTO.getDepartmentDTO().getDeptTitle()); //부서명
-            }
+            System.out.print(employeeDTO.getDepartmentDTO().getDeptTitle()); //부서명
             System.out.print(" / ");
             System.out.print(employeeDTO.getJobDTO().getJobName()); //직급
             System.out.print(" / ");
-            if (employeeDTO.getPhone() == null) { //전화번호 없을때
-                System.out.print("미지정");
-
-            } else {
-                System.out.print(employeeDTO.getPhone()); //전화번호 있을때
-            }
+            System.out.print(employeeDTO.getPhone());
             System.out.println("");
 
 
@@ -98,17 +89,9 @@ public class PrintResult {
             System.out.print(" / ");
             System.out.print(employeeDTO.getEmail());//이메일
             System.out.print(" / ");
-            if (employeeDTO.getPhone() == null) { //전화번호 없을때
-                System.out.print("미지정");
-            } else {
-                System.out.print(employeeDTO.getPhone()); //전화번호 있을때
-            }
+            System.out.print(employeeDTO.getPhone());
             System.out.print(" / ");
-            if (employeeDTO.getDepartmentDTO() == null) {//부서명 null
-                System.out.print("미배정");
-            } else {
-                System.out.print(employeeDTO.getDepartmentDTO().getDeptTitle()); //부서명
-            }
+            System.out.print(employeeDTO.getDepartmentDTO().getDeptTitle()); //부서명
             System.out.print(" / ");
             System.out.print(employeeDTO.getJobDTO().getJobName()); //직급
             System.out.print(" / ");
@@ -125,11 +108,8 @@ public class PrintResult {
             System.out.print(employeeDTO.getEmail());//이메일
             System.out.print(" / ");
 
-            if (employeeDTO.getPhone() == null) { //전화번호 없을때
-                System.out.print("미지정");
-            } else {
-                System.out.print(employeeDTO.getPhone()); //전화번호 있을때
-            }
+            System.out.print(employeeDTO.getPhone());
+
             System.out.print(" / ");
             System.out.println(employeeDTO.getJobDTO().getJobName()); //직급
 
@@ -146,17 +126,11 @@ public class PrintResult {
             System.out.print(employeeDTO.getEmail());//이메일
             System.out.print(" / ");
 
-            if (employeeDTO.getPhone() == null) { //전화번호 없을때
-                System.out.print("미지정");
-            } else {
-                System.out.print(employeeDTO.getPhone()); //전화번호 있을때
-            }
+            System.out.print(employeeDTO.getPhone());
+
             System.out.print(" / ");
-            if (employeeDTO.getDepartmentDTO() == null) {//부서명 null
-                System.out.println("미배정");
-            } else {
                 System.out.println(employeeDTO.getDepartmentDTO().getDeptTitle()); //부서명
             }
         }
     }
-}
+

@@ -55,9 +55,9 @@
     <select id="selectAllMember" resultMap="employeeResultMap1">
         SELECT
                 A.EMP_NAME,
-                B.DEPT_TITLE,
+                IFNULL(B.DEPT_TITLE, '미배정') AS DEPT_TITLE,
                 C.JOB_NAME,
-                A.PHONE
+                IFNULL(A.PHONE, '미지정') AS PHONE
         FROM employee A
         LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
         LEFT JOIN job C on A.JOB_CODE = C.JOB_CODE
@@ -65,7 +65,7 @@
 
     <select id="selectAllDepartement" resultMap="department">
         SELECT
-                A.DEPT_TITLE
+                IFNULL(A.DEPT_TITLE, '미배정') AS DEPT_TITLE
         FROM DEPARTMENT A
     </select>
 
@@ -74,8 +74,8 @@
                 A.EMP_NAME,
                 A.EMP_NO,
                 A.EMAIL,
-                A.PHONE,
-                B.DEPT_TITLE,
+                IFNULL(A.PHONE, '미지정') AS PHONE,
+                IFNULL(B.DEPT_TITLE, '미배정') AS DEPT_TITLE,
                 C.JOB_NAME,
                 A.SALARY
         FROM employee A
@@ -93,7 +93,7 @@
         SELECT
                 A.EMP_NAME,
                 A.EMAIL,
-                A.PHONE,
+                IFNULL(A.PHONE, '미지정') AS PHONE,
                 C.JOB_NAME
         FROM employee A
         LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
@@ -105,8 +105,8 @@
         SELECT
                 A.EMP_NAME,
                 A.EMAIL,
-                A.PHONE,
-                B.DEPT_TITLE,
+                IFNULL(A.PHONE, '미지정') AS PHONE,
+                IFNULL(B.DEPT_TITLE, '미배정') AS DEPT_TITLE,
                 C.JOB_NAME
         FROM employee A
         LEFT JOIN DEPARTMENT B ON A.DEPT_CODE = B.DEPT_ID
