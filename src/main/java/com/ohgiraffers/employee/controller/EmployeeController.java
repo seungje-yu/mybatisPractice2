@@ -1,9 +1,7 @@
 package com.ohgiraffers.employee.controller;
 
 import com.ohgiraffers.employee.common.EmployeeEnum;
-import com.ohgiraffers.employee.model.dto.DepartmentDTO;
-import com.ohgiraffers.employee.model.dto.EmployeeAndDepartmentAndJobDTO;
-import com.ohgiraffers.employee.model.dto.EmployeeDTO;
+import com.ohgiraffers.employee.model.dto.*;
 import com.ohgiraffers.employee.model.service.EmployeeService;
 import com.ohgiraffers.employee.view.EmployeeView;
 import com.ohgiraffers.employee.view.ResultView;
@@ -45,7 +43,6 @@ public class EmployeeController {
     }
 
     public void selectEmployeesByJobName(Map<String, String> parameter) {
-        System.out.println(parameter);
         List<EmployeeAndDepartmentAndJobDTO> employeeAndDepartmentAndJobList = employeeService.selectEmployeesByJobName(parameter);
         if (employeeAndDepartmentAndJobList != null) {
             resultView.printEmployeesByJobName(employeeAndDepartmentAndJobList);
@@ -53,39 +50,40 @@ public class EmployeeController {
             resultView.printError(EmployeeEnum.selectEmployeesByDeptTitle);
         }
     }
+
     public void insertDept(Map<String, String> parameter) {
         DepartmentDTO department = new DepartmentDTO();
         department.setDeptId(parameter.get("deptId"));
         department.setDeptTitle(parameter.get("deptTitle"));
         department.setLocationId(parameter.get("locationId"));
 
-        if(employeeService.insertDept(department)){
+        if (employeeService.insertDept(department)) {
             resultView.printSuccess(EmployeeEnum.insertDept);
-        }else{
+        } else {
             resultView.printError(EmployeeEnum.insertDept);
         }
     }
 
     public void insertEmp(Map<String, Object> parameter) {
         EmployeeDTO employee = new EmployeeDTO();
-        employee.setEmpId((String)parameter.get("empId"));
-        employee.setEmpName((String)parameter.get("empName"));
-        employee.setEmpNo((String)parameter.get("empNo"));
-        employee.setEmail((String)parameter.get("email"));
-        employee.setPhone((String)parameter.get("phone"));
-        employee.setDeptCode((String)parameter.get("deptCode"));
-        employee.setJobCode((String)parameter.get("jobCode"));
-        employee.setSalLevel((String)parameter.get("salLevel"));
-        employee.setSalary((int)parameter.get("salary"));
-        employee.setBonus((double)parameter.get("bonus"));
-        employee.setManagerId((String)parameter.get("managerId"));
-        employee.setHireDate((String)parameter.get("hireDate"));
-        employee.setEntDate((String)parameter.get("entDate"));
-        employee.setEntYn((String)parameter.get("entYn"));
+        employee.setEmpId((String) parameter.get("empId"));
+        employee.setEmpName((String) parameter.get("empName"));
+        employee.setEmpNo((String) parameter.get("empNo"));
+        employee.setEmail((String) parameter.get("email"));
+        employee.setPhone((String) parameter.get("phone"));
+        employee.setDeptCode((String) parameter.get("deptCode"));
+        employee.setJobCode((String) parameter.get("jobCode"));
+        employee.setSalLevel((String) parameter.get("salLevel"));
+        employee.setSalary((int) parameter.get("salary"));
+        employee.setBonus((double) parameter.get("bonus"));
+        employee.setManagerId((String) parameter.get("managerId"));
+        employee.setHireDate((String) parameter.get("hireDate"));
+        employee.setEntDate((String) parameter.get("entDate"));
+        employee.setEntYn((String) parameter.get("entYn"));
 
-        if(employeeService.insertEmp(employee)){
+        if (employeeService.insertEmp(employee)) {
             resultView.printSuccess(EmployeeEnum.insertEmp);
-        }else{
+        } else {
             resultView.printError(EmployeeEnum.insertEmp);
         }
     }
@@ -99,21 +97,39 @@ public class EmployeeController {
         employee.setDeptCode(parameter.get("deptCode"));
         employee.setJobCode(parameter.get("jobCode"));
 
-        if(employeeService.updateEmp(employee)){
+        if (employeeService.updateEmp(employee)) {
             resultView.printSuccess(EmployeeEnum.updateEmp);
-        }else{
+        } else {
             resultView.printError(EmployeeEnum.updateEmp);
         }
     }
+
     public void resignEmp(Map<String, String> parameter) {
         EmployeeDTO employee = new EmployeeDTO();
         employee.setEmpId(parameter.get("empId"));
         employee.setEntYn(parameter.get("entYn"));
 
-        if(employeeService.resignEmp(employee)){
+        if (employeeService.resignEmp(employee)) {
             resultView.printSuccess(EmployeeEnum.updateEmp);
-        }else{
+        } else {
             resultView.printError(EmployeeEnum.updateEmp);
+        }
+    }
+
+    public void selectEmployeesAndDept() {
+        List<EmployeesByDept> employeesByDeptList = employeeService.selectEmployeesAndDept();
+        if(employeesByDeptList!=null){
+            resultView.printEmployeesAndDept(employeesByDeptList);
+        }else{
+            resultView.printError(EmployeeEnum.selectEmployeesAndDept);
+        }
+    }
+    public void selectEmployeeAndManagerId() {
+        List<EmployeeAndJobDTO> employeeAndJobList = employeeService.selectEmployeeAndManagerId();
+        if(employeeAndJobList!=null){
+            resultView.printEmployeeAndJob(employeeAndJobList);
+        }else{
+            resultView.printError(EmployeeEnum.selectEmployeeAndManagerId);
         }
     }
 }

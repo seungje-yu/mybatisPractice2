@@ -1,8 +1,6 @@
 package com.ohgiraffers.employee.model.mapper;
 
-import com.ohgiraffers.employee.model.dto.DepartmentDTO;
-import com.ohgiraffers.employee.model.dto.EmployeeAndDepartmentAndJobDTO;
-import com.ohgiraffers.employee.model.dto.EmployeeDTO;
+import com.ohgiraffers.employee.model.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +17,6 @@ public interface EmployeeMapper {
     int updateEmp(EmployeeDTO employee);
 
     int resignEmp(EmployeeDTO employee);
+    List<EmployeesByDept> selectEmployeesAndDept();
+    List<EmployeeAndJobDTO> selectEmployeeAndManagerId();
 }

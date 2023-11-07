@@ -95,11 +95,11 @@ VALUES ('223',
 
 /*7. 직원 정보 변경*/
 UPDATE EMPLOYEE
-SET EMP_NAME = '이름이름',
-    PHONE = '01012345678',
-    EMAIL = 'asd@asd.com',
+SET EMP_NAME  = '이름이름',
+    PHONE     = '01012345678',
+    EMAIL     = 'asd@asd.com',
     DEPT_CODE = 'D3',
-    JOB_CODE = 'J2'
+    JOB_CODE  = 'J2'
 WHERE EMP_NO = '770808-2665412';
 
 /*8. 직원 퇴사 기능*/
@@ -107,9 +107,70 @@ UPDATE EMPLOYEE
 SET ENT_YN = 'Y'
 WHERE EMP_ID = '203';
 
-#
-# select D.DEPT_TITLE,E.EMP_NAME
-# FROM employee E
-#          RIGHT JOIN department D ON E.DEPT_CODE = D.DEPT_ID;
+/*9. 부서별 직원 목록 조회
+  부서를 먼저 출력한다. 다음에 \t를 여러번 한 다음에
+  그 부서에 맞는 직원 리스트를 출력한다. 이때 만약 이 리스트 자체가 null 이라면
+  직원 없음. 이라고 출력하면 된다.*/
+select D.DEPT_TITLE, E.EMP_NAME
+FROM employee E
+         RIGHT JOIN department D ON E.DEPT_CODE = D.DEPT_ID;
 
-#
+/*10. 직원목록 조회
+  E1 과 E2 를 셀프조인 하는데.
+  E1의 관리자 아이디와 E2의 직원 아이디가 같은걸 LEFT JOIN 하므로
+  여기서 E1의 관리자 아이디가 null 이라면. 그 직원은 관리자.
+  만약 E1의 직원아이디 값이 존재하면 이 직원은 일반직원*/
+select E.EMP_NAME,
+       E.EMP_NO,
+       E.EMAIL,
+       IFNULL(E.PHONE,'미지정') AS PHONE,
+       E.DEPT_CODE,
+       (SELECT J.JOB_NAME FROM JOB J WHERE J.JOB_CODE=E.JOB_CODE) AS JOB_NAME,
+       E.ENT_YN,
+       CASE
+           WHEN (select E1.MANAGER_ID
+                 FROM EMPLOYEE E1
+                          LEFT JOIN EMPLOYEE E2 ON E1.MANAGER_ID = E2.EMP_ID
+                 WHERE E.EMP_ID = E1.EMP_ID) IS NULL THEN '관리자'
+           ELSE '직원'
+           END AS USER_TYPE
+FROM EMPLOYEE E
+WHERE DEPT_CODE IS NOT NULL
+ORDER BY USER_TYPE;
+
+select E.EMP_NAME,
+       E.EMP_NO,
+       E.EMAIL,
+       IFNULL(E.PHONE,'미지정') AS PHONE,
+       E.DEPT_CODE,
+       J.JOB_NAME,
+       E.ENT_YN,
+       CASE
+           WHEN (select E1.MANAGER_ID
+                 FROM EMPLOYEE E1
+                          LEFT JOIN EMPLOYEE E2 ON E1.MANAGER_ID = E2.EMP_ID
+                 WHERE E.EMP_ID = E1.EMP_ID) IS NULL THEN '관리자'
+           ELSE '직원'
+           END AS USER_TYPE
+FROM EMPLOYEE E
+         JOIN JOB J ON J.JOB_CODE = E.JOB_CODE
+WHERE E.DEPT_CODE is not null
+ORDER BY USER_TYPE;
+
+select E.EMP_NAME,
+       E.EMP_NO,
+       E.EMAIL,
+       IFNULL(E.PHONE,'미지정') AS PHONE,
+       E.DEPT_CODE,
+       (SELECT J.JOB_NAME FROM JOB J WHERE J.JOB_CODE=E.JOB_CODE) AS JOB_NAME,
+       E.ENT_YN,
+       CASE
+           WHEN (select E1.MANAGER_ID
+                 FROM EMPLOYEE E1
+                          LEFT JOIN EMPLOYEE E2 ON E1.MANAGER_ID = E2.EMP_ID
+                 WHERE E.EMP_ID = E1.EMP_ID) IS NULL THEN '관리자'
+           ELSE '직원'
+           END AS USER_TYPE
+FROM EMPLOYEE E
+WHERE DEPT_CODE IS NOT NULL
+ORDER BY USER_TYPE ;

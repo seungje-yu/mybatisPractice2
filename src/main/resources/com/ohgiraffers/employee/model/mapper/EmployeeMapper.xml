@@ -151,4 +151,39 @@
             SET ENT_YN = '${entYn}'
         WHERE EMP_ID = '${empId}'
     </update>
+    <resultMap id="EmployeeByDeptResultMap" type="com.ohgiraffers.employee.model.dto.EmployeesByDept">
+        <result property="deptTitle" column="DEPT_TITLE"/>
+        <collection property="employeeList" ofType="com.ohgiraffers.employee.model.dto.EmployeeDTO">
+            <result property="empName" column="EMP_NAME"/>
+        </collection>
+    </resultMap>
+    <select id="selectEmployeesAndDept" resultMap="EmployeeByDeptResultMap">
+        select D.DEPT_TITLE, E.EMP_NAME
+        FROM employee E
+        RIGHT JOIN department D ON E.DEPT_CODE = D.DEPT_ID
+    </select>
+    <resultMap id="EmployeeAndJobResultMap" type="com.ohgiraffers.employee.model.dto.EmployeeAndJobDTO">
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="userType" column="USER_TYPE"/>
+        <association property="employee" resultMap="EmployeeResultMap"/>
+    </resultMap>
+    <select id="selectEmployeeAndManagerId" resultMap="EmployeeAndJobResultMap">
+        select E.EMP_NAME,
+        E.EMP_NO,
+        E.EMAIL,
+        IFNULL(E.PHONE,'미지정') AS PHONE,
+        E.DEPT_CODE,
+        (SELECT J.JOB_NAME FROM JOB J WHERE J.JOB_CODE=E.JOB_CODE) AS JOB_NAME,
+        E.ENT_YN,
+        CASE
+        WHEN (select E1.MANAGER_ID
+        FROM EMPLOYEE E1
+        LEFT JOIN EMPLOYEE E2 ON E1.MANAGER_ID = E2.EMP_ID
+        WHERE E.EMP_ID = E1.EMP_ID) IS NULL THEN '관리자'
+        ELSE '직원'
+        END AS USER_TYPE
+        FROM EMPLOYEE E
+        WHERE DEPT_CODE IS NOT NULL
+        ORDER BY USER_TYPE
+    </select>
 </mapper>

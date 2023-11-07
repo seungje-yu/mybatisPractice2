@@ -1,8 +1,6 @@
 package com.ohgiraffers.employee.model.service;
 
-import com.ohgiraffers.employee.model.dto.DepartmentDTO;
-import com.ohgiraffers.employee.model.dto.EmployeeAndDepartmentAndJobDTO;
-import com.ohgiraffers.employee.model.dto.EmployeeDTO;
+import com.ohgiraffers.employee.model.dto.*;
 import com.ohgiraffers.employee.model.mapper.EmployeeMapper;
 import org.apache.ibatis.session.SqlSession;
 
@@ -111,5 +109,26 @@ public class EmployeeService {
         }
         sqlSession.close();
         return result > 0;
+    }
+
+    public List<EmployeesByDept> selectEmployeesAndDept() {
+        SqlSession sqlSession = getSqlSession();
+        employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+        List<EmployeesByDept> employeesByDeptList = employeeMapper.selectEmployeesAndDept();
+        sqlSession.close();
+        return employeesByDeptList;
+
+    }
+
+    public List<EmployeeAndJobDTO> selectEmployeeAndManagerId() {
+        SqlSession sqlSession = getSqlSession();
+        employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+        List<EmployeeAndJobDTO> employeeAndJobList = employeeMapper.selectEmployeeAndManagerId();
+//        for (var x : employeeAndJobList) {
+//            System.out.println(x);
+//        } // 21개가 출력되어야 하는데 9개가 출력된다.
+        System.out.println("=====");
+        sqlSession.close();
+        return employeeAndJobList;
     }
 }

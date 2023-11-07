@@ -2,6 +2,8 @@ package com.ohgiraffers.employee.view;
 
 import com.ohgiraffers.employee.common.EmployeeEnum;
 import com.ohgiraffers.employee.model.dto.EmployeeAndDepartmentAndJobDTO;
+import com.ohgiraffers.employee.model.dto.EmployeeAndJobDTO;
+import com.ohgiraffers.employee.model.dto.EmployeesByDept;
 
 import java.util.List;
 
@@ -67,6 +69,12 @@ public class ResultView {
             case updateEmp:
                 System.out.println("실패");
                 break;
+            case selectEmployeesAndDept:
+                System.out.println("실패");
+                break;
+            case selectEmployeeAndManagerId:
+                System.out.println("실패");
+                break;
         }
     }
 
@@ -81,6 +89,27 @@ public class ResultView {
             case updateEmp:
                 System.out.println("성공");
                 break;
+        }
+    }
+
+    public void printEmployeesAndDept(List<EmployeesByDept> employeesByDeptList) {
+        System.out.println(employeesByDeptList);
+        for (int i = 0; i < employeesByDeptList.size(); i++) {
+            EmployeesByDept employeesByDeptElement = employeesByDeptList.get(i);
+            System.out.println(employeesByDeptElement.getDeptTitle());
+            if (!employeesByDeptElement.getEmployeeList().isEmpty()) {
+                for (int j = 0; j < employeesByDeptElement.getEmployeeList().size(); j++) {
+                    System.out.println("\t\t\t" + employeesByDeptElement.getEmployeeList().get(j).getEmpName());
+                }
+            } else {
+                System.out.println("\t\t\t직원없음");
+            }
+        }
+    }
+
+    public void printEmployeeAndJob(List<EmployeeAndJobDTO> employeeAndJobList) {
+        for(var employeeAndJob:employeeAndJobList){
+            System.out.println(employeeAndJob);
         }
     }
 }

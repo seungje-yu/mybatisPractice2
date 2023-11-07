@@ -37,7 +37,9 @@ public class EmployeeView {
             System.out.println("6. 신규 직원 생성");
             System.out.println("7. 직원 정보 변경(이름, 전화번호, 이메일, 부서, 직급");
             System.out.println("8. 직원 퇴사");
-            System.out.println("9. 끝내기");
+            System.out.println("9. 부서별 직원 목록 조회");
+            System.out.println("10. 직원목록 조회(관리자, 직원)");
+            System.out.println("11. 끝내기");
             System.out.println("==========");
             System.out.print("메뉴: ");
             int menu = sc.nextInt();
@@ -67,6 +69,12 @@ public class EmployeeView {
                     employeeController.resignEmp(inputEmpInfo3());
                     break;
                 case 9:
+                    employeeController.selectEmployeesAndDept();
+                    break;
+                case 10:
+                    employeeController.selectEmployeeAndManagerId();
+                    break;
+                case 11:
                     System.out.println("종료합니다.");
                     return;
             }
@@ -79,13 +87,13 @@ public class EmployeeView {
         String empId = sc.nextLine();
         System.out.print("변경할 entYn를 입력하세요 : ");
         String entYn = sc.nextLine();
-        Map<String, String > map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("empId", empId);
         map.put("entYn", entYn);
         return map;
     }
 
-    private Map<String,String> inputEmpInfo2() {
+    private Map<String, String> inputEmpInfo2() {
         Scanner sc = new Scanner(System.in);
         System.out.print("바꿀 직원의 empNo를 입력하세요 : ");
         String empNo = sc.nextLine();
