@@ -101,3 +101,15 @@ SET EMP_NAME = '이름이름',
     DEPT_CODE = 'D3',
     JOB_CODE = 'J2'
 WHERE EMP_NO = '770808-2665412';
+
+/*8. 직원 퇴사 기능*/
+UPDATE EMPLOYEE
+SET ENT_YN = 'Y'
+WHERE EMP_ID = '203';
+
+#
+# select D.DEPT_TITLE,E.EMP_NAME
+# FROM employee E
+#          RIGHT JOIN department D ON E.DEPT_CODE = D.DEPT_ID;
+
+#
