@@ -163,18 +163,23 @@
         RIGHT JOIN department D ON E.DEPT_CODE = D.DEPT_ID
     </select>
     <resultMap id="EmployeeAndJobResultMap" type="com.ohgiraffers.employee.model.dto.EmployeeAndJobDTO">
+        <result property="empName" column="EMP_NAME"/>
+        <result property="empNo" column="EMP_NO"/>
+        <result property="email" column="EMAIL"/>
+        <result property="phone" column="PHONE"/>
+        <result property="deptCode" column="DEPT_CODE"/>
         <result property="jobName" column="JOB_NAME"/>
+        <result property="entYn" column="ENT_YN"/>
         <result property="userType" column="USER_TYPE"/>
-        <association property="employee" resultMap="EmployeeResultMap"/>
     </resultMap>
     <select id="selectEmployeeAndManagerId" resultMap="EmployeeAndJobResultMap">
-        select E.EMP_NAME,
-        E.EMP_NO,
-        E.EMAIL,
+        select E.EMP_NAME AS EMP_NAME,
+        E.EMP_NO AS EMP_NO,
+        E.EMAIL AS EMAIL,
         IFNULL(E.PHONE,'미지정') AS PHONE,
-        E.DEPT_CODE,
+        E.DEPT_CODE AS DEPT_CODE,
         (SELECT J.JOB_NAME FROM JOB J WHERE J.JOB_CODE=E.JOB_CODE) AS JOB_NAME,
-        E.ENT_YN,
+        E.ENT_YN AS ENT_YN,
         CASE
         WHEN (select E1.MANAGER_ID
         FROM EMPLOYEE E1
