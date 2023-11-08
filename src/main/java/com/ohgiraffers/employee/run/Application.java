@@ -1,5 +1,9 @@
 package com.ohgiraffers.employee.run;
 
+import com.ohgiraffers.employee.view.EmployeeView;
+
+import static com.ohgiraffers.common.Template.getSqlSession;
+
 public class Application {
 
     public static void main(String[] args) {
@@ -9,5 +13,13 @@ public class Application {
         /* 데이터베이스 명 : employee
         *  아이디는 기존에 사용했던 ohgiraffers를 이용
         * */
+
+        System.out.println(getSqlSession());
+
+        EmployeeView employeeView = new EmployeeView();
+
+        employeeView.displayView();
     }
+
+
 }
