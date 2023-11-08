@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.employee.model.mapper.EmployeeMapper">
+    <resultMap id="EmployeeResultMap" type="com.ohgiraffers.employee.model.dto.EmployeeDTO">
+        <id property="empId" column="EMP_ID"/>
+        <result property="empName" column="EMP_NAME"/>
+        <result property="empNo" column="EMP_NO"/>
+        <result property="email" column="EMAIL"/>
+        <result property="phone" column="PHONE"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="jobCode" column="JOB_CODE"/>
+        <result property="salLevel" column="SAL_LEVEL"/>
+        <result property="salary" column="SALARY"/>
+        <result property="bonus" column="BONUS"/>
+        <result property="managerId" column="MANAGER_ID"/>
+        <result property="hireDate" column="HIRE_DATE"/>
+        <result property="entDate" column="ENT_DATE"/>
+        <result property="entYn" column="ENT_YN"/>
+    </resultMap>
+    <resultMap id="DepartmentResultMap" type="com.ohgiraffers.employee.model.dto.DepartmentDTO">
+        <id property="deptId" column="DEPT_ID"/>
+        <result property="deptTitle" column="DEPT_TITLE"/>
+        <result property="locationId" column="LOCATION_ID"/>
+    </resultMap>
+    <resultMap id="JobResultMap" type="com.ohgiraffers.employee.model.dto.JobDTO">
+        <id property="jobCode" column="JOB_CODE"/>
+        <result property="jobName" column="JOB_NAME"/>
+    </resultMap>
+    <resultMap id="EmployeeAndDepartmentAndJobResultMap" type="com.ohgiraffers.employee.model.dto.EmployeeAndDepartmentAndJobDTO">
+        <association property="employee" resultMap="EmployeeResultMap"/>
+        <association property="department" resultMap="DepartmentResultMap"/>
+        <association property="job" resultMap="JobResultMap"/>
+    </resultMap>
+    <select id="selectAllEmployees" resultMap="EmployeeAndDepartmentAndJobResultMap">
+        SELECT
+                E.EMP_NAME,
+                IFNULL(D.DEPT_TITLE, '미배정') as DEPT_TITLE,
+                J.JOB_NAME,
+                IFNULL(E.PHONE, '미지정') AS PHONE
+        FROM EMPLOYEE E
+                LEFT JOIN DEPARTMENT D
+                        ON E.DEPT_CODE = D.DEPT_ID
+                LEFT JOIN JOB J
+                        ON E.JOB_CODE = J.JOB_CODE
+    </select>
+    <select id="selectEmployeeByNameOrId" resultMap="EmployeeAndDepartmentAndJobResultMap">
+        SELECT
+                E.EMP_NAME,
+                E.EMP_NO,
+                E.EMAIL,
+                E.PHONE,
+                D.DEPT_TITLE,
+                J.JOB_NAME,
+                E.SALARY
+        FROM EMPLOYEE E
+                JOIN DEPARTMENT D
+                        ON E.DEPT_CODE = D.DEPT_ID
+                JOIN JOB J
+                        ON E.JOB_CODE = J.JOB_CODE
+        <where>
+            <choose>
+                <when test="category eq '이름'">
+                    E.EMP_NAME = '${value}'
+                </when>
+                <when test="category eq '아이디'">
+                    E.EMP_ID = ${value}
+                </when>
+            </choose>
+        </where>
+    </select>
+    <select id="selectEmployeesByDeptTitle" resultMap="EmployeeAndDepartmentAndJobResultMap">
+        SELECT
+                E.EMP_NAME,
+                E.EMAIL,
+                E.PHONE,
+                J.JOB_NAME,
+                D.DEPT_TITLE
+        FROM EMPLOYEE E
+                JOIN DEPARTMENT D
+                        ON E.DEPT_CODE = D.DEPT_ID
+                JOIN JOB J
+                        ON E.JOB_CODE = J.JOB_CODE
+        WHERE D.DEPT_TITLE = #{deptTitle}
+    </select>
+    <select id="selectEmployeesByJobName" resultMap="EmployeeAndDepartmentAndJobResultMap">
+        SELECT
+                E.EMP_NAME,
+                E.EMAIL,
+                E.PHONE,
+                D.DEPT_TITLE
+        FROM EMPLOYEE E
+                JOIN DEPARTMENT D
+                        ON E.DEPT_CODE = D.DEPT_ID
+                JOIN JOB J
+                        ON E.JOB_CODE = J.JOB_CODE
+        WHERE J.JOB_NAME = #{jobName}
+    </select>
+    <insert id="insertDept">
+        INSERT INTO
+                DEPARTMENT
+                    (DEPT_ID,
+                    DEPT_TITLE,
+                    LOCATION_ID)
+        VALUES ('${deptId}' , '${deptTitle}', '${locationId}');
+    </insert>
+    <insert id="insertEmp">
+        INSERT INTO employee
+                    (EMP_ID,
+                    EMP_NAME,
+                    EMP_NO,
+                    EMAIL,
+                    PHONE,
+                    DEPT_CODE,
+                    JOB_CODE,
+                    SAL_LEVEL,
+                    SALARY,
+                    BONUS,
+                    MANAGER_ID,
+                    HIRE_DATE,
+                    ENT_DATE,
+                    ENT_YN)
+        VALUES
+                    ('${empId}',
+                    '${empName}',
+                    '${empNo}',
+                    '${email}',
+                    '${phone}',
+                    '${deptCode}',
+                    '${jobCode}',
+                    '${salLevel}',
+                    ${salary},
+                    ${bonus},
+                    '${managerId}',
+                    '${hireDate}',
+                    '${entDate}',
+                    '${entYn}')
+    </insert>
+    <update id="updateEmp">
+        UPDATE EMPLOYEE
+            SET EMP_NAME = '${empName}',
+            PHONE = '${phone}',
+            EMAIL = '${email}',
+            DEPT_CODE = '${deptCode}',
+            JOB_CODE = '${jobCode}'
+        WHERE EMP_NO = '${empNo}'
+    </update>
+    <update id="resignEmp">
+        UPDATE EMPLOYEE
+            SET ENT_YN = '${entYn}'
+        WHERE EMP_ID = '${empId}'
+    </update>
+    <resultMap id="EmployeeByDeptResultMap" type="com.ohgiraffers.employee.model.dto.EmployeesByDept">
+        <result property="deptTitle" column="DEPT_TITLE"/>
+        <collection property="employeeList" ofType="com.ohgiraffers.employee.model.dto.EmployeeDTO">
+            <result property="empName" column="EMP_NAME"/>
+        </collection>
+    </resultMap>
+    <select id="selectEmployeesAndDept" resultMap="EmployeeByDeptResultMap">
+        select D.DEPT_TITLE, E.EMP_NAME
+        FROM employee E
+        RIGHT JOIN department D ON E.DEPT_CODE = D.DEPT_ID
+    </select>
+    <resultMap id="EmployeeAndJobResultMap" type="com.ohgiraffers.employee.model.dto.EmployeeAndJobDTO">
+        <result property="empName" column="EMP_NAME"/>
+        <result property="empNo" column="EMP_NO"/>
+        <result property="email" column="EMAIL"/>
+        <result property="phone" column="PHONE"/>
+        <result property="deptCode" column="DEPT_CODE"/>
+        <result property="jobName" column="JOB_NAME"/>
+        <result property="entYn" column="ENT_YN"/>
+        <result property="userType" column="USER_TYPE"/>
+    </resultMap>
+    <select id="selectEmployeeAndManagerId" resultMap="EmployeeAndJobResultMap">
+        select E.EMP_NAME AS EMP_NAME,
+        E.EMP_NO AS EMP_NO,
+        E.EMAIL AS EMAIL,
+        IFNULL(E.PHONE,'미지정') AS PHONE,
+        E.DEPT_CODE AS DEPT_CODE,
+        (SELECT J.JOB_NAME FROM JOB J WHERE J.JOB_CODE=E.JOB_CODE) AS JOB_NAME,
+        E.ENT_YN AS ENT_YN,
+        CASE
+        WHEN (select E1.MANAGER_ID
+        FROM EMPLOYEE E1
+        LEFT JOIN EMPLOYEE E2 ON E1.MANAGER_ID = E2.EMP_ID
+        WHERE E.EMP_ID = E1.EMP_ID) IS NULL THEN '관리자'
+        ELSE '직원'
+        END AS USER_TYPE
+        FROM EMPLOYEE E
+        WHERE DEPT_CODE IS NOT NULL
+        ORDER BY USER_TYPE
+    </select>
+</mapper>
