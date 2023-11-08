@@ -60,12 +60,13 @@ public class EmployeeView {
         Scanner sc = new Scanner(System.in);
         System.out.print("퇴사처리할 사원 이름을 입력하세요 : ");
         String empName = sc.nextLine();
-//        System.out.print("퇴사 날짜를 입력하세요 : ");
-//        String entDate = sc.nextLine();
+        System.out.print("퇴사 날짜를 입력하세요 (입력 예 : 2023-10-10 or 231010 ): ");
+        String entDate = sc.nextLine();
 
         EmployeeDTO retirementEmp = new EmployeeDTO();
 
         retirementEmp.setEmpName(empName);
+        retirementEmp.setEntDate(entDate);
 
         return retirementEmp;
 
@@ -126,11 +127,14 @@ public class EmployeeView {
         double salary = sc.nextDouble();
         System.out.print("신규 등록할 사원의 보너스를 입력하세요 : ");
         float bonus = sc.nextFloat();
+        sc.nextLine();
         System.out.print("신규 등록할 사원의 사번을 입력하세요 : ");
         String managerId = sc.nextLine();
 
-//        System.out.print("신규 등록할 사원의 입사일을 입력하세요 : ");
-//        String hireDate = sc.nextLine();
+        System.out.print("신규 등록할 사원의 입사일을 입력하세요 : ");
+        String hireDate = sc.nextLine();
+
+
 
 
 
@@ -146,7 +150,7 @@ public class EmployeeView {
         newEmp.setSalary(salary);
         newEmp.setBonus(bonus);
         newEmp.setManagerId(managerId);
-//        newEmp.setHireDate(hireDate);
+        newEmp.setHireDate(hireDate);
         //ent_DATE는 null로
         //ent_yn 은 N 디폴트로 쿼리문에
         return newEmp;

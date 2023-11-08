@@ -181,21 +181,23 @@
         SALARY,
         BONUS,
         MANAGER_ID,
+        HIRE_DATE,
         ENT_YN
         )
         SELECT
-        (SELECT MAX(EMP_ID) + 1 FROM employee) AS EMP_ID,
-        #{ empName } AS EMP_NAME,
-        #{ empNo } AS EMP_NO,
-        #{ email } AS EMAIL,
-        #{ phone } AS PHONE,
-        #{ deptCode } AS DEPT_CODE,
-        #{ jobCode } AS JOB_CODE,
-        #{ salLevel } AS SAL_LEVEL,
-        #{ salary } AS SALARY,
-        #{ bonus } AS BONUS,
-        #{ managerId } AS MANAGER_ID,
-        'N' AS ENT_YN
+        (SELECT MAX(EMP_ID) + 1 FROM employee),
+        #{ empName },
+        #{ empNo },
+        #{ email },
+        #{ phone },
+        #{ deptCode },
+        #{ jobCode },
+        #{ salLevel },
+        #{ salary },
+        #{ bonus },
+        #{ managerId },
+        CAST(#{ hireDate } AS DATE),
+        'N'
 
     </insert>
 
@@ -234,8 +236,11 @@
     </update>
 <update id="retirementEmp" parameterType="com.ohgiraffers.common.EmployeeDTO">
     UPDATE EMPLOYEE
-    SET ENT_YN = 'Y'
-    WHERE EMP_NAME = #{ empName };
+
+    SET
+        ENT_DATE = CAST(#{ entDate } AS DATE),
+        ENT_YN = 'Y'
+    WHERE EMP_NAME = #{ empName }
 
 </update>
 
