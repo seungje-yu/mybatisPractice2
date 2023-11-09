@@ -73,15 +73,6 @@
         </association>
     </resultMap>
 
-
-
-
-
-
-
-
-
-
     <resultMap id="collectionSearchDTO" type="com.ohgiraffers.employee.dto.CollectionSearchDTO">
         <id property="departmentId" column="dept_id"/>
         <result property="departmentTitle" column="dept_title"/>
@@ -98,15 +89,6 @@
         RIGHT JOIN
         department d ON a.dept_code = d.dept_id
     </select>
-
-
-
-
-
-
-
-
-
 
     <select id="searchNameAndId" resultMap="searchNameAndId">
         SELECT
