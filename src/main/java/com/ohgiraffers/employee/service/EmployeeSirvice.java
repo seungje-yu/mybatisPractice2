@@ -123,4 +123,28 @@ public class EmployeeSirvice {
         }
         sqlSession.close();
     }
+
+    public List<SearchDTO> selectManager() {
+        SqlSession sqlSession = getSqlSession();
+
+        EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+
+        List<SearchDTO> empList = mapper.selectManager();
+
+        sqlSession.close();
+
+        return empList;
+    }
+
+    public List<CollectionSearchDTO> collectionSearch() {
+        SqlSession sqlSession = getSqlSession();
+
+        EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+
+        List<CollectionSearchDTO> empList = mapper.collectionSearch();
+
+        sqlSession.close();
+
+        return empList;
+    }
 }

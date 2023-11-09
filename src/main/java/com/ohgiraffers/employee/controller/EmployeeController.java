@@ -1,5 +1,6 @@
 package com.ohgiraffers.employee.controller;
 
+import com.ohgiraffers.employee.dto.CollectionSearchDTO;
 import com.ohgiraffers.employee.dto.EmpAndJobAndDpDTO;
 import com.ohgiraffers.employee.dto.SearchConditionAndValues;
 import com.ohgiraffers.employee.dto.SearchDTO;
@@ -56,4 +57,30 @@ public class EmployeeController {
         }
     }
 
+    public void selectManager() {
+
+        EmployeeSirvice employeeSirvice = new EmployeeSirvice();
+
+        List<SearchDTO> empList = employeeSirvice.selectManager();
+
+        if (empList != null){
+            PrintResult.printselectManager(empList);
+        }else {
+            PrintResult.printErrorMessage("selectManager");
+        }
+    }
+
+    public void collectionSearch() {
+
+        EmployeeSirvice employeeSirvice = new EmployeeSirvice();
+
+        List<CollectionSearchDTO> empList = employeeSirvice.collectionSearch();
+
+        if (empList != null){
+            PrintResult.printCollectionSearch(empList);
+        }else {
+            PrintResult.printErrorMessage("collectionSearch");
+        }
+    }
 }
+

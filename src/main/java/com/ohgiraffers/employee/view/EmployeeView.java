@@ -39,6 +39,8 @@ public class EmployeeView {
             System.out.println("6. 신규 직원 생성");
             System.out.println("7. 직원 정보 변경(이름, 전화번호, 이메일,부서, 직급)");
             System.out.println("8. 직원퇴사");
+            System.out.println("9. 부서별 직원 목록 조회");
+            System.out.println("10. 직원 목록 조회");
             System.out.println("0. 프로그램 종료");
             System.out.println("==========================================");
             System.out.print("원하는 프로그램을 선택해주세요 : ");
@@ -53,6 +55,8 @@ public class EmployeeView {
                 case 6 : employeeSirvice.insertNewEmp(inputEmpInfo()); break;
                 case 7 : employeeSirvice.modifyEmp(inputModifyEmp()); break;
                 case 8 : employeeSirvice.deleteEmp(inputEmpId()); break;
+                case 9 : employeeController.collectionSearch(); break;
+                case 10 :employeeController.selectManager(); break;
                 case 0 : return;
             }
         }while (true);
@@ -74,6 +78,7 @@ public class EmployeeView {
     }
 
     private ModifyEmpDTO inputModifyEmp() {
+
         Scanner sc = new Scanner(System.in);
         System.out.print("수정할 직원의 아이디를 입력해주세요 : ");
         int id = sc.nextInt();

@@ -20,4 +20,8 @@ public interface EmployeeMapper {
     int modifyEmp(ModifyEmpDTO searchDTO);
 
     int deleteEmp(EmployeeDTO employeeDTO);
+
+    List<SearchDTO> selectManager();
+
+    List<CollectionSearchDTO> collectionSearch();
 }

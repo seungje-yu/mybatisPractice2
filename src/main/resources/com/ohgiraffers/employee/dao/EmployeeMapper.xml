@@ -61,13 +61,53 @@
         <result property="empEmail" column="email"/>
         <result property="empPhone" column="phone"/>
         <result property="empSalary" column="salary"/>
+        <result property="empDeptCode" column="dept_code"/>
+        <result property="entYn" column="ent_yn"/>
+        <result property="managerId" column="user_type"/>
         <association property="department" javaType="com.ohgiraffers.employee.dto.DepartmentDTO">
+            <id property="departmentId" column="dept_id"/>
             <result property="departmentTitle" column="dept_title"/>
         </association>
         <association property="job" javaType="com.ohgiraffers.employee.dto.JobDTO">
             <result property="jobName" column="job_name"/>
         </association>
     </resultMap>
+
+
+
+
+
+
+
+
+
+
+    <resultMap id="collectionSearchDTO" type="com.ohgiraffers.employee.dto.CollectionSearchDTO">
+        <id property="departmentId" column="dept_id"/>
+        <result property="departmentTitle" column="dept_title"/>
+        <collection property="empList" ofType="com.ohgiraffers.employee.dto.EmployeeDTO">
+            <result property="name" column="emp_name"/>
+        </collection>
+    </resultMap>
+    <select id="collectionSearch" resultMap="collectionSearchDTO">
+        SELECT
+        d.dept_title as dept_title,
+        a.emp_name
+        FROM
+        employee a
+        RIGHT JOIN
+        department d ON a.dept_code = d.dept_id
+    </select>
+
+
+
+
+
+
+
+
+
+
     <select id="searchNameAndId" resultMap="searchNameAndId">
         SELECT
         a.emp_id,
@@ -197,4 +237,35 @@
         WHERE
         a.emp_id = #{ id }
     </update>
+
+    <select id="selectManager" resultMap="searchNameAndId">
+        SELECT
+        a.emp_name,
+        a.emp_no,
+        a.email,
+        IFNULL(a.phone, '미지정') phone,
+        d.dept_id,
+        c.job_name,
+        a.ent_yn,
+        CASE WHEN a.manager_id IS NOT NULL THEN '직원' ELSE '관리자' END as user_type
+        FROM
+        employee a
+        LEFT JOIN
+        job c ON a.job_code = c.job_code
+        LEFT JOIN
+        department d ON a.dept_code = d.dept_id
+        WHERE
+        d.DEPT_ID IS NOT NULL
+        ORDER BY user_type
+    </select>
+
+    <select id="collectionSearch" resultMap="collectionSearchDTO">
+        SELECT
+        d.dept_title as dept_title,
+        a.emp_name
+        FROM
+        employee a
+        RIGHT JOIN
+        department d ON a.dept_code = d.dept_id
+    </select>
 </mapper>

@@ -2,9 +2,7 @@ package com.ohgiraffers.employee.dto;
 
 public class EmployeeDTO {
     private int id;
-
     private String name;
-
     private String no;
     private String email;
     private String phone;

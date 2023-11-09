@@ -1,27 +1,49 @@
 package com.ohgiraffers.employee.dto;
 
 public class SearchDTO {
+
     private int empId;
     private String empName;
     private String empNo;
     private String empEmail;
     private String empPhone;
     private int empSalary;
+    private String entYn;
+    private String managerId;
+    private String empDeptCode;
     private JobDTO job;
     private DepartmentDTO department;
 
     public SearchDTO() {
     }
 
-    public SearchDTO(int empId, String empName, String empNo, String empEmail, String empPhone, int empSalary, JobDTO job, DepartmentDTO department) {
+    public SearchDTO(int empId, String empName, String empNo, String empEmail, String empPhone, int empSalary, String entYn, String managerId, JobDTO job, DepartmentDTO department) {
         this.empId = empId;
         this.empName = empName;
         this.empNo = empNo;
         this.empEmail = empEmail;
         this.empPhone = empPhone;
         this.empSalary = empSalary;
+        this.entYn = entYn;
+        this.managerId = managerId;
         this.job = job;
         this.department = department;
+    }
+
+    public String getEntYn() {
+        return entYn;
+    }
+
+    public void setEntYn(String entYn) {
+        this.entYn = entYn;
+    }
+
+    public String getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(String managerId) {
+        this.managerId = managerId;
     }
 
     public int getEmpId() {
@@ -97,6 +119,8 @@ public class SearchDTO {
                 ", empEmail='" + empEmail + '\'' +
                 ", empPhone='" + empPhone + '\'' +
                 ", empSalary=" + empSalary +
+                ", entYn='" + entYn + '\'' +
+                ", managerId='" + managerId + '\'' +
                 ", job=" + job +
                 ", department=" + department +
                 '}';
